@@ -1,13 +1,21 @@
 import java.util.*;
 
-public class LibraryManager {
+import repository.IBookRepository;
+import service.PenaltyService;
+import controller.BorrowingController;
+import controller.ReservationController;
+import controller.SubscriberController;
+import model.Book;
+import model.Borrowing;
+import model.Subscriber;
+
+public class LibraryManager implements IBookRepository {
     private static LibraryManager instance;
 
     private List<Book> books = new ArrayList<>();
-    private List<Subscriber> subscribers = new ArrayList<>();
-    private List<Borrowing> borrowings = new ArrayList<>();
-    private List<Reservation> reservations = new ArrayList<>();
-    private List<Penalty> penalties = new ArrayList<>();
+    private BorrowingController borrowingController = new BorrowingController();
+    private ReservationController reservationController = new ReservationController();
+    private SubscriberController subscriberController = new SubscriberController();
 
     private LibraryManager() {}
 
@@ -22,23 +30,32 @@ public class LibraryManager {
 
     public void removeBook(Book book) { books.remove(book); }
 
-    public void register(Subscriber s) { subscribers.add(s); }
+    public void register(Subscriber s) { subscriberController.register(s); }
 
     public void borrowBook(Subscriber s, Book b) {
-        // Logic to borrow a book
+        borrowingController.borrowBook(s, b);
     }
 
     public void returnBook(Borrowing b) {
-        // Logic to return a book
+        borrowingController.returnBook(b);
     }
 
     public void reserveBook(Subscriber s, Book b) {
-        // Logic to reserve
+        reservationController.reserveBook(s, b);
     }
 
     public double calculatePenalty(Borrowing b) {
-        // Calculate penalty logic here
-        return 0;
+        return borrowingController.calculatePenalty(b);
+    }
+
+    @Override
+    public List<Book> getBooks() {
+        return new ArrayList<>(books);
+    }
+
+    @Override
+    public void removeBook(String bookId) {
+        books.removeIf(book -> book.getId().equals(bookId));
     }
 
     // Other utility methods:

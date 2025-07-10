@@ -1,3 +1,4 @@
+package model;
 public class DigitalBook extends Book {
     private int availableLicenses;
 

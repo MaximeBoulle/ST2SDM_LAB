@@ -1,3 +1,4 @@
+package model;
 public class PhysicalBook extends Book {
     private int copyCount;
     private int availableCopies;

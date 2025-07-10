@@ -1,3 +1,4 @@
+package model;
 public abstract class Book {
     protected String title;
     protected String author;
@@ -23,4 +24,8 @@ public abstract class Book {
     }
 
     // TO DO Getters and setters
+
+    public String getId() {
+        return bookID;
+    }
 }

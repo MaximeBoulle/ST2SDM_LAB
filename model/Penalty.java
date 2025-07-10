@@ -1,4 +1,7 @@
-public class Penalty {
+package model;
+
+import interfaces.PenaltyApplicable;
+public class Penalty implements PenaltyApplicable {
     private double amount;
     private String reason;
 

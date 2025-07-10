@@ -1,3 +1,4 @@
+package model;
 import java.util.Date;
 
 public class Borrowing {
@@ -16,4 +17,16 @@ public class Borrowing {
     }
 
     // Getters and setters
+    public Subscriber getSubscriber() {
+        return subscriber;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public boolean isOverdue() {
+        return new Date().after(dueDate);
+    }
+
 }

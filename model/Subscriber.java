@@ -1,3 +1,4 @@
+package model;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -18,5 +19,8 @@ public class Subscriber {
         this.isSuspended = false;
     }
 
+    public int getTotalBorrowedBooks() {
+        return borrowedBooks.size();
+    }
     // Getters and setters
 }

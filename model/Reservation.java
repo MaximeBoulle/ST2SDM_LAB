@@ -1,6 +1,10 @@
+package model;
 import java.util.Date;
 
-public class Reservation {
+import interfaces.Renewable;
+import interfaces.Reservable;
+
+public class Reservation implements Reservable, Renewable{
     private Subscriber subscriber;
     private Book book;
     private Date reservationDate;
