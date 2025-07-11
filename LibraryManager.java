@@ -1,36 +1,47 @@
 import java.util.*;
-
-import repository.IBookRepository;
-import service.PenaltyService;
+import observer.SubscriberObserver;
+import strategy.PenaltyCalculationStrategy;
 import controller.BorrowingController;
 import controller.ReservationController;
 import controller.SubscriberController;
-import model.Book;
-import model.Borrowing;
-import model.Subscriber;
 
-public class LibraryManager implements IBookRepository {
+public abstract class LibraryManager implements IBookRepository {
     private static LibraryManager instance;
 
-    private List<Book> books = new ArrayList<>();
+    protected List<Book> books = new ArrayList<>();
     private BorrowingController borrowingController = new BorrowingController();
     private ReservationController reservationController = new ReservationController();
     private SubscriberController subscriberController = new SubscriberController();
+    private PenaltyCalculationStrategy penaltyCalculationStrategy;
+    private List<SubscriberObserver> observers = new ArrayList<>();
 
-    private LibraryManager() {}
+    protected LibraryManager() {}
 
     public static synchronized LibraryManager getInstance() {
         if (instance == null) {
-            instance = new LibraryManager();
+            instance = createLibraryManager();
         }
         return instance;
     }
 
-    public void addBook(Book book) { books.add(book); }
+    protected abstract LibraryManager createLibraryManager();
 
-    public void removeBook(Book book) { books.remove(book); }
+    public void setPenaltyCalculationStrategy(PenaltyCalculationStrategy strategy) {
+        this.penaltyCalculationStrategy = strategy;
+    }
 
-    public void register(Subscriber s) { subscriberController.register(s); }
+    public void addBook(Book book) {
+        books.add(book);
+        notifyObservers(book);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
+    }
+
+    public void register(Subscriber s) {
+        subscriberController.register(s);
+    }
 
     public void borrowBook(Subscriber s, Book b) {
         borrowingController.borrowBook(s, b);
@@ -45,7 +56,24 @@ public class LibraryManager implements IBookRepository {
     }
 
     public double calculatePenalty(Borrowing b) {
-        return borrowingController.calculatePenalty(b);
+        if (penaltyCalculationStrategy != null) {
+            return penaltyCalculationStrategy.calculatePenalty(b);
+        }
+        return borrowingController.calculatePenalty(b); // Default behavior
+    }
+
+    public void addObserver(SubscriberObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(SubscriberObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers(Book book) {
+        for (SubscriberObserver observer : observers) {
+            observer.update(book);
+        }
     }
 
     @Override
